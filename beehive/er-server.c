@@ -60,14 +60,15 @@
  * Resources to be activated need to be imported through the extern keyword.
  * The build system automatically compiles the resources in the corresponding sub-directory.
  */
+#include "dev/fc2231.h"
 extern resource_t
-  res_alarm,
+  res_fc2231_load,
   res_toggle;
 
 /* Include headers and resources for the 'hih6130' sensor. */
-#include "dev/hih6130.h"
-extern resource_t res_hih6130_temp;
-extern resource_t res_hih6130_hum;
+#include "dev/am2315.h"
+extern resource_t res_am2315_temp;
+extern resource_t res_am2315_hum;
 
 PROCESS(er_example_server, "Erbium Example Server");
 AUTOSTART_PROCESSES(&er_example_server);
@@ -78,7 +79,7 @@ PROCESS_THREAD(er_example_server, ev, data)
 
   PROCESS_PAUSE();
 
-  PRINTF("Starting 6LoWPAN Workshop Server\n");
+  PRINTF("Starting 6LoWPAN Beehive Server\n");
 
   /* Initialize the REST engine. */
   rest_init_engine();
@@ -89,16 +90,20 @@ PROCESS_THREAD(er_example_server, ev, data)
    * All static variables are the same for each URI path.
    */
   /* Enable observable resource. */
-  rest_activate_resource(&res_alarm, "observables/humidityALERT");
+  rest_activate_resource(&res_fc2231_load, "sensors/fc2231/load");
+  SENSORS_ACTIVATE(fc2231);
+  /* Send it to sleep, in order to save energy. */
+  fc2231.configure(SENSORS_ACTIVE, FC2231_SLEEP);
+
   /* Enable onboard LED (actuator). */
 #if PLATFORM_HAS_LEDS
   rest_activate_resource(&res_toggle, "actuators/toggle");
 #endif
 
   /* Set our resources paths and also activate the sensor. */
-  rest_activate_resource(&res_hih6130_temp, "sensors/hih6130/temperature");
-  rest_activate_resource(&res_hih6130_hum, "sensors/hih6130/humidity");
-  SENSORS_ACTIVATE(hih6130);
+  rest_activate_resource(&res_am2315_temp, "sensors/am2315/temperature");
+  rest_activate_resource(&res_am2315_hum, "sensors/am2315/humidity");
+  SENSORS_ACTIVATE(am2315);
 
   while(1) {
     PROCESS_WAIT_EVENT();
