@@ -108,6 +108,12 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 static void
 res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  leds_toggle(LEDS_RED);
+  /* Power load cells and wait a few ticks. */
+  fc2231.configure(SENSORS_ACTIVE, FC2231_WAKE);
+  clock_wait(100);
+  /* Get the sensor (neutral) value. This will be the tarw. */
+  tare = fc2231.value(FC2231_WEIGHT);
+  /* Send sensor back to sleep. */
+  fc2231.configure(SENSORS_ACTIVE, FC2231_SLEEP);
 }
 
