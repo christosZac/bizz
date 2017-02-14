@@ -1,3 +1,5 @@
+# README In Progress...
+
 # Save the bees! A 6loWPAN approach
 
 ## Introduction
@@ -6,13 +8,19 @@ This repository contains the code and libraries used for [Save the bees](https:/
 
 ## Architecture
 
-This implemantation is based on low energy **802.15.4** standard and is using **6loWPAN** adaptation layer in order to embrace **IPv6** addressing and meshing routing protocols. That makes it ideal for use in remote areas with limited resources, in terms of power and connectivity. On the application layer, the nodes use the **CoAP** protocol, which is really useful when coming to constrained devices. The demo follows a *client-server* approach, with the beehives acting as servers (and also creating a mesh netwrok). The clients can reside on computational stronger hosts (e.g. a RPi). The client is responsible to run a user defined script in order to poll the beehives and gather data. Then, the same script uploads the data to the cloud using a suiting protocol (such as **http** or **mqtt**).   
+This implemantation is based on low energy **802.15.4** standard and is using **6loWPAN** adaptation layer in order to embrace **IPv6** addressing and meshing routing protocols. That makes it ideal for use in remote areas with limited resources, in terms of power and connectivity. On the application layer, the nodes use the **CoAP** protocol, which is really useful when coming to constrained devices. The demo follows a *client-server* approach, with the beehives acting as servers (and also creating a mesh netwrok). The clients can reside on computational stronger hosts (e.g. a RPi). The client is responsible to run a user defined script in order to poll the beehives and gather data. Then, the same script uploads the data to the cloud using a suiting protocol (such as **http** or **mqtt**).
+
+One of the primary targets of the project is taking advantage of the constrained device and their low energy needs. Using the above architecture we can run the devices for months on rechargable batteries. More specifically the below diagram shows the great power efficiency we get, using MAC protocols (contikimac) which keep the radio off most of the time. In addition to that, integrated circuits make it possible to deactivate sensors during inactivity periods thus saving more energy. A deep-sleep approach is not implemented on this demo but users are free to experiment! 
+
+![alt text](https://github.com/christosZac/bizz)
 
 ## Requirements
 ### Hardware
 * Zolertia [Remote](https://github.com/Zolertia/Resources/wiki/RE-Mote) or [Firefly](https://github.com/Zolertia/Resources/wiki/Firefly) board.
 * [AM 2315](https://cdn-shop.adafruit.com/datasheets/AM2315.pdf) I2C humidity/temperature sensor.  
 * 4 x [FC 2231](http://www.mouser.com/ds/2/418/FC22-710299.pdf) load cell sensors. 
+* [MM74HC125N](http://www.mouser.de/ProductDetail/Fairchild-Semiconductor/MM74HC125N/?qs=BcFB%2f8l%252bKIqgOjOHKDdfgw==) tri-state buffer. (optional for energy saving)
+* [CD74HC4052](http://www.ti.com/product/CD74HC4052/datasheet) multiplexer.
 
 *The current code is designed for zolertia Remote motes. Changes may be necessary in order to use the Firefly mote.*
 
@@ -21,7 +29,7 @@ This implemantation is based on low energy **802.15.4** standard and is using **
 * **ContikiOS** tools and libraries, in order to flash the beehive nodes. [Here](https://github.com/Zolertia/Resources/wiki/Toolchain-and-tools) you can find more information for installation.
 * [relayr Dashboard](https://dev.relayr.io) account.
 
-##Hardware setup
+## Hardware setup
 
 
 ## Beehive Server
@@ -89,6 +97,9 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 * More on [load cells]()
 
 ##TODO
+* Add links 
+* Add script
+
 1. Adding more sensors to the beehive
 2. Have a hollistic image of the current beehive condition
 3. Visualize and aggregate data in a more sophisticated way
