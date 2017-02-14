@@ -146,10 +146,11 @@ fc2315_read(uint16_t *val)
       debug_load += aux_load;
       /* Convert and add to total. */
       load += convert2kg(aux_load);
-
+      
+      
       //DEBUG print the total sensor value
       PRINTF("FC2231: Load cell total: %u\n", debug_load); 
-      //PRINTF("FC2231: Total weight: %u\n" , convert2kg(debug_load));
+      PRINTF("FC2231: Total weight: %u\n" , convert2kg(debug_load));
 
  
 

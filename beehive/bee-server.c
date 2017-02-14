@@ -31,10 +31,10 @@
  */
 
 /**
- *      6LoWPAN workshop CoAP server.
+ *      CoAP server running on the Beehive.
  * \author
- *      Christos Zachiotis <christos@relayr.io>
- *      Antonio P. P. Almeida <appa@perusio.net>
+ *      Christos Zachiotis <zachiotis.sc@gmail.com>
+ *      
  */
 
 #include <stdio.h>
@@ -57,20 +57,20 @@
 #endif
 
 /*
- * Resources to be activated need to be imported through the extern keyword.
- * The build system automatically compiles the resources in the corresponding sub-directory.
+ * Include the load cell resource and the toggle "indicator"
+ * resource.
  */
 #include "dev/fc2231.h"
 extern resource_t
   res_fc2231_load,
   res_toggle;
 
-/* Include headers and resources for the 'hih6130' sensor. */
+/* Include headers and resources for the 'am2315' sensor. */
 #include "dev/am2315.h"
 extern resource_t res_am2315_temp;
 extern resource_t res_am2315_hum;
 
-PROCESS(er_example_server, "Erbium Example Server");
+PROCESS(er_example_server, "Erbium Server - Save the bees! ");
 AUTOSTART_PROCESSES(&er_example_server);
 
 PROCESS_THREAD(er_example_server, ev, data)
@@ -89,10 +89,10 @@ PROCESS_THREAD(er_example_server, ev, data)
    * WARNING: Activating twice only means alternate path, not two instances!
    * All static variables are the same for each URI path.
    */
-  /* Enable observable resource. */
+  /* Enable load resource and sensor. */
   rest_activate_resource(&res_fc2231_load, "sensors/fc2231/load");
   SENSORS_ACTIVATE(fc2231);
-  /* Send it to sleep, in order to save energy. */
+  /* Send cells to sleep, in order to save energy. */
   fc2231.configure(SENSORS_ACTIVE, FC2231_SLEEP);
 
   /* Enable onboard LED (actuator). */
@@ -100,11 +100,12 @@ PROCESS_THREAD(er_example_server, ev, data)
   rest_activate_resource(&res_toggle, "actuators/toggle");
 #endif
 
-  /* Set our resources paths and also activate the sensor. */
+  /* Set our resources hum & temp paths and also activate the sensor. */
   rest_activate_resource(&res_am2315_temp, "sensors/am2315/temperature");
   rest_activate_resource(&res_am2315_hum, "sensors/am2315/humidity");
   SENSORS_ACTIVATE(am2315);
 
+  /* Now wait for a request to arrive. */
   while(1) {
     PROCESS_WAIT_EVENT();
   }                             /* while (1) */

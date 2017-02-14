@@ -32,10 +32,10 @@
 
 /**
  * \file
- *      6LoWPAN workshop CoAP FC2231 sensor resource (humidity).
+ *      Resource for the FC2231 load-cells.
  * \author
- *      Christos Zachiotis <christos@relayr.io>
- *      Antonio P. P. Almeida <appa@perusio.net>
+ *      Christos Zachiotis <zachiotis.sc@gmail.com>
+ *     
  */
 
 #include "contiki.h"
@@ -48,9 +48,10 @@ static void res_get_handler(void *request, void *response, uint8_t *buffer, uint
 static void res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
 
+/* This must be stored in non-volatile memory! */
  static uint16_t tare = 0;
 
-/* Defining the humidity resource. */
+/* Defining the load resource. */
 RESOURCE(res_fc2231_load,
          "title=\"Load\";rt=\"FC2231\"",
          res_get_handler,
@@ -64,19 +65,18 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 {
 
   uint16_t load = 0;
+  /* Wake up the sensor. */
   fc2231.configure(SENSORS_ACTIVE, FC2231_WAKE);
-      /* Wait for sensors to settle. */
-      //etimer_set(&sensor_et, CLOCK_SECOND);
-      //PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&sensor_et));
-      clock_wait(100);
-      /* Read sensor. */
-      load = (fc2231.value(FC2231_WEIGHT) - tare);
-      /* Avoid having negative (invalid) values. */
-      if(load & 0x8000 ){
-        load = 0;
-      }
-      /* Deactivate to save energy. */
-      fc2231.configure(SENSORS_ACTIVE, FC2231_SLEEP);
+  /* Wait for sensors to settle. */
+  clock_wait(100);
+  /* Read sensor. */
+  load = (fc2231.value(FC2231_WEIGHT) - tare);
+  /* Avoid having negative (invalid) values. */
+  if(load & 0x8000 ){
+    load = 0;
+  }
+  /* Deactivate to save energy. */
+  fc2231.configure(SENSORS_ACTIVE, FC2231_SLEEP);
 
   unsigned int accept = -1;
   /* Parse the Accept header. */
@@ -105,6 +105,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
   }
 }
 
+/* POST the resource to calibrate sensor. */
 static void
 res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
