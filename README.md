@@ -2,39 +2,32 @@
 
 ## Introduction
 
-This repository contains the code and libraries used for [Save the bees](https://github.com/save-the-bees). This project includes monitoring the ambient conditions and status of distant beehives on the field. The data can be visualized and be accessible worldwide through a cloud service. The current implementation aims at using constrained devices with priority to low energy protocols regarding radio communication and hardware management.    
+This repository contains the code and libraries used for [Save the bees](https://github.com/save-the-bees). This project includes monitoring the ambient conditions and status of distant beehives on the field. The data can be visualized and be accessible worldwide through a cloud service. The current implementation aims at using constrained devices with priority to low energy protocols regarding radio communication and hardware management.   
+
+## Architecture
+
+This implemantation is based on low energy **802.15.4** standard and is using **6loWPAN** adaptation layer in order to embrace **IPv6** addressing and meshing routing protocols. That makes it ideal for use in remote areas with limited resources, in terms of power and connectivity. On the application layer, the nodes use the **CoAP** protocol, which is really useful when coming to constrained devices. The demo follows a *client-server* approach, with the beehives acting as servers (and also creating a mesh netwrok). The clients can reside on computational stronger hosts (e.g. a RPi). The client is responsible to run a user defined script in order to poll the beehives and gather data. Then, the same script uploads the data to the cloud using a suiting protocol (such as **http** or **mqtt**).   
 
 ## Requirements
 ### Hardware
 * Zolertia [Remote](https://github.com/Zolertia/Resources/wiki/RE-Mote) or [Firefly](https://github.com/Zolertia/Resources/wiki/Firefly) board.
 * [AM 2315](https://cdn-shop.adafruit.com/datasheets/AM2315.pdf) I2C humidity/temperature sensor.  
-* [HIH 6130](https://www.sparkfun.com/products/11295) I2C humidity/temperature sensor.  
 * 4 x [FC 2231](http://www.mouser.com/ds/2/418/FC22-710299.pdf) load cell sensors. 
 
-*Only one humidity/temperature sensor is used. You can enable/disable sensors at compile time.* 
+*The current code is designed for zolertia Remote motes. Changes may be necessary in order to use the Firefly mote.*
 
 ### Software
-* A **6loWPAN gateway**. This will be the link to the IPv4 world. It encorporates a border-router to communicate with 6loWPAN motes and a proxy-server to receive and forward CoAP requests. Analytic installation steps can be found [here]().
+* A **6loWPAN gateway**. This will be the link to the IPv4 world. It encorporates a border-router to communicate with 6loWPAN motes and a proxy-server to receive and forward CoAP requests. This is where the script will be run. Analytic installation steps can be found [here]().
 * **ContikiOS** tools and libraries, in order to flash the beehive nodes. [Here](https://github.com/Zolertia/Resources/wiki/Toolchain-and-tools) you can find more information for installation.
 * [relayr Dashboard](https://dev.relayr.io) account.
 
+##Hardware setup
 
-## Beehive Client
+
+## Beehive Server
 The client running on the beehive mote. The mote is responsible for tracking information such as the internal/external temperature & humidity, as well as the current weight of the beehive. The beehives create a mesh network using a sub-GHz frequency radio. The ones closer to the border-router communicate directly and forward traffic from and to distant beehives. Through the border-router (6loWPAN gateway), the data are uploaded to a cloud service.
 
 ### Setting up
-* Gateway settings:  
-First the address of the border-router (default: ```fd00::1```), and the port of the CoAP server (default: ```8181```) must be specified: 
-
-	```c
-	#define SERVER_NODE(ipaddr) uip_ip6addr(ipaddr, 0xfd00, 	0, 0, 0, 0, 0, 0, 1) 
-	#define REMOTE_PORT     UIP_HTONS(8181)
-	```
-Then the path the server is listening to:
-
-	```c
-	#define URL_PATH "/target"
-	```
 * Radio settings:  
 The motes can work both in 2.4 GHz and Sub-GHz frequencies. This can be changed from the configuration header ```project-conf.c```, by (un)defining ```CC1200_CONF_SUBGHZ_50KBPS_MODE```.
 
@@ -48,9 +41,8 @@ The load cells must be calibrated due to the fact that we use four of them and u
 3. Execute:
 
 	```shell 
-	make TARGET=zoul SENSOR=am2315 client.upload
-	```
-	*Note that ```SENSOR``` can also be hih6130*.	
+	make TARGET=zoul bee-server.upload
+	```	
 4. The mote is ready to deploy!
 
 
@@ -62,7 +54,7 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 2. Flash the new version by executing 
 	
 	```shell
-	make TARGET=zoul SENSOR=am2315 client.upload
+	make TARGET=zoul bee-server.upload
 	```
 3. From the ```beehive/``` directory execute:
 
@@ -70,13 +62,25 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 	make TARGET=zoul login
 	```
 	That will give access to serial debugging console.
-4. Press the user button on the Remote board to tare the scale. Now write down the total voltage value you get from the sensors as seen on the debug console.
-5. Put a known weight on the scale. Write down the sensor reading once more.
-6. Now you have the two points needed. Calculate the straight line slope and constant. 
+4. Press the user button on the Remote board to tare the scale. Now write down the voltage value you get from **one** sensor, as seen on the debug console.
+5. Put a known weight on the cell. Write down the sensor reading once more.
+6. Now you have the two points needed. For example if you put 0 and 1 Kg respectively: (1,3445), (0,4567). Calculate the straight line slope and constant. 
 7. Change the ```cf2231.h``` constants: ```FC2231_SLOPE``` and ```FC2231_CONSTANT```.
-8. Flash the code again and you are ready to go! 
+8. Flash the code again and you are ready to go!  
+
+*Note that ideally all the sensors are the same or really close in their outputs. If that is not the case you will be off for a few gramms*
 
 ### Tracking
+1. Copy the script file to the host machine.
+2. Set the values and parameters in the setting file:
+	* ena
+	* dyo
+	* tria
+3. Run the script in a shell, executing:
+	```shell
+	
+	```
+4. Open the dashboard and check that everything is up & running.
 
 
 ## References
