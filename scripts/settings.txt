@@ -1,0 +1,7 @@
+OPERATION = GET
+PATH = coap://[DEVICE IPv6]:PORT/
+TEMP_PATH = sensors/am2315/temperature
+HUM_PATH = sensors/am2315/humidity
+LOAD_PATH = sensors/fc2231/load
+DEVICE_ID = The mote’s ID goes here.
+USER_TOKEN = The user’s token goes here.
