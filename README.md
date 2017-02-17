@@ -49,7 +49,7 @@ The load cells must be calibrated due to the fact that we use four of them and u
 3. Execute:
 
 	```shell 
-	make TARGET=zoul bee-server.upload
+	$make TARGET=zoul bee-server.upload
 	```	
 4. The mote is ready to deploy!
 
@@ -62,12 +62,12 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 2. Flash the new version by executing 
 	
 	```shell
-	make TARGET=zoul bee-server.upload
+	$make TARGET=zoul bee-server.upload
 	```
 3. From the ```beehive/``` directory execute:
 
 	```shell
-	make TARGET=zoul login
+	$make TARGET=zoul login
 	```
 	That will give access to serial debugging console.
 4. Press the user button on the Remote board to tare the scale. Now write down the voltage value you get from **one** sensor, as seen on the debug console.
@@ -79,14 +79,18 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 *Note that ideally all the sensors are the same or really close in their outputs. If that is not the case you will be off for a few gramms*
 
 ### Tracking
-1. Copy the script file to the host machine.
+1. Copy the python script and settings files to the host machine.
 2. Set the values and parameters in the setting file:
-	* ena
-	* dyo
-	* tria
+	* ```OPERATION```: Refers to CoAP operation. Set to ```GET```
+	* ```PATH```: the node's IPv6 address and port. For example: ```coap://[fd00::212:4b00:615:9fe2]:5683/```. **Important**: Do not forget the final slash ```/``` !
+	* ```RESOURCE_PATH```: the resource specific path following the node adress. For example the humidity path for the specific example would be: ```HUM_PATH = sensors/am2315/humidity```
+	* ```DEVICE_ID```: the ID you find in the device settings menu on the dashboard. 
+	* ```USER_TOKEN```: the token you can find in the Account section of relayr dashboard.  
+	**Important**: Exlude the ``Bearer`` part. 
 3. Run the script in a shell, executing:
-	```shell
 	
+	```shell
+	$python poll.py
 	```
 4. Open the dashboard and check that everything is up & running.
 
