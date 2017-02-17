@@ -17,7 +17,7 @@ def main():  # pragma: no cover
     global client    
     # Define a dictionary where the settings file will be read into.
     dict = {}
-    with open("settings") as f:
+    with open("settings.txt") as f:
         # For every line in the file
         for line in f:
             # Remove special characters & whitespaces.
@@ -69,24 +69,25 @@ def main():  # pragma: no cover
             # The returned values are stored in different variables.
             client = HelperClient(server=(host, port))
             response_temp = client.get(path + temp_path) 
-            print response_temp.pretty_print()
+            # Set the right data format for the API call.
             dashboardTemp = {'meaning' : 'temperature' , 'value' : float(response_temp.payload) /10 }
             client.stop()
 
             client = HelperClient(server=(host, port))
             response_hum = client.get(path + hum_path)
-            print response_hum.pretty_print()
+            # Set the right data format for the API call.
             dashboardHum = {'meaning' : 'humidity' , 'value' : float(response_hum.payload) / 10 }
             client.stop()
 
             client = HelperClient(server=(host, port))
             response_load = client.get(path + load_path)
-            print response_load.pretty_print()
+            # Set the right data format for the API call.
             dashboardLoad = {'meaning' : 'load' , 'value' : float(response_load.payload) /1000 }
             client.stop()
         except Exceptions as e:
             print type(e)
 
+        # Print the data to be uploaded.
         print dashboardTemp 
         print dashboardHum
         print dashboardLoad

@@ -39,9 +39,8 @@ The power lines of the sensors are connected to the MM74HC125N tri-state buffer.
 
 In our case, these components were connected to a prototyping board in order to gain easier connectivity and access by more devices. Below you can find a [fritzing](http://fritzing.org) diagram and the labels for the shrouded connector used. 
 
-![alt text](https://raw.githubusercontent.com/christosZac/bizz/master/bees_bb.png)
-
-![alt text](https://raw.githubusercontent.com/christosZac/bizz/master/connector.png)
+<img src="./bees_bb.png" alt="bees_bb" style="width: 200px;"/>
+<img src="./connector.png" alt="connector" style="width: 300px;"/>
 
 ## Beehive Server
 The client running on the beehive mote. The mote is responsible for tracking information such as the internal/external temperature & humidity, as well as the current weight of the beehive. The beehives create a mesh network using a sub-GHz frequency radio. The ones closer to the border-router communicate directly and forward traffic from and to distant beehives. Through the border-router (6loWPAN gateway), the data are uploaded to a cloud service.
@@ -107,9 +106,9 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 
 
 ## References
-* [ContikiOS]().
-* [relayr. cloud]().
-* More on [load cells]()
+* [ContikiOS](http://www.contiki-os.org).
+* [relayr. dashboard](https://dev.relayr.io).
+* More on [load cells](https://learn.sparkfun.com/tutorials/getting-started-with-load-cells)
 
 ##TODO
 * Add links 

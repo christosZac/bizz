@@ -45,8 +45,8 @@
 #define FC2231_H_
 /*----------------------------------------------------------------------------*/
 /* Specific settings for FC2231 load cell. (x100) */
-#define FC2231_CONSTANT 2928
-#define FC2231_SLOPE    784
+#define FC2231_CONSTANT 2950
+#define FC2231_SLOPE    981
 /*----------------------------------------------------------------------------*/
 #define FC2231_ACTIVE	SENSORS_ACTIVE
 #define FC2231_SUCCESS	0
