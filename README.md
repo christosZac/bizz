@@ -12,7 +12,7 @@ This implemantation is based on low energy **802.15.4** standard and is using **
 
 One of the primary targets of the project is taking advantage of the constrained device and their low energy needs. Using the above architecture we can run the devices for months on rechargable batteries. More specifically the below diagram shows the great power efficiency we get, using MAC protocols (contikimac) which keep the radio off most of the time. In addition to that, integrated circuits make it possible to deactivate sensors during inactivity periods thus saving more energy. A deep-sleep approach is not implemented on this demo but users are free to experiment! 
 
-![alt text](https://github.com/christosZac/bizz)
+![alt text](https://raw.githubusercontent.com/christosZac/bizz/master/RemoteConsumption.png)
 
 ## Requirements
 ### Hardware

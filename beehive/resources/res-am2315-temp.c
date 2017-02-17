@@ -60,7 +60,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 {
 
   uint16_t temperature = 0;
-  temperature = am2315.value(AM2315_VAL_TEMP) / 10;
+  temperature = am2315.value(AM2315_VAL_TEMP);
 
   unsigned int accept = -1;
   /* Parse the Accept header. */

@@ -61,7 +61,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
 
   uint16_t rh = 0;
   /* Probing and reading the sensor humidity value. */
-  rh = am2315.value(AM2315_VAL_HUM) / 10;
+  rh = am2315.value(AM2315_VAL_HUM);
 
   unsigned int accept = -1;
   /* Parse the Accept header. */
