@@ -33,14 +33,14 @@ One of the primary targets of the project is taking advantage of the constrained
 
 In that step we must interconnect all the components so we get a working prototype. The I2C sensor is directly connected to respective pins of the zolertia Remote. The load cells, which are more energy consuming (around 20mA combined) are connected to the ICs. 
 
-The analog output lines of the sensors are multiplexed through the CD54HC4052 multiplexer: Following the datasheet we connect the 2 control signals to pins **PB6** and **PB7** of the Remote board, and the analog input to the **ADC1** pin. We also connect Vcc, Gnd and the sensors outputs to the respective pins.
+The analog output lines of the sensors are multiplexed through the CD54HC4052 multiplexer: Following the [datasheet](https://github.com/Zolertia/Resources/wiki/RE-Mote) we connect the 2 control signals (X0,X1) to pins **PB6** and **PB7** of the Remote board, and the analog input to the **ADC1** pin. We also connect Vcc, Gnd and the sensors outputs to the respective pins.
 
 The power lines of the sensors are connected to the MM74HC125N tri-state buffer. According to the datasheet, we short-circuit all the enable signals with Remote's **PC6** pin. Also, short-circuit all the tri-state inputs to Vcc. In that way, we can enable or disable power to our sensors. On the tri-state outputs, we connect the respective Vcc lines of the sensors. Notice that the pre-mentioned IC uses negative enables.
 
 In our case, these components were connected to a prototyping board in order to gain easier connectivity and access by more devices. Below you can find a [fritzing](http://fritzing.org) diagram and the labels for the shrouded connector used. 
 
 <img src="./bees_bb.png" alt="bees_bb" style="width: 200px;"/>
-<img src="./connector.png" alt="connector" style="width: 300px;"/>
+<img src="./connector.png" alt="connector" hspace=50 style="width: 300px;"/>
 
 ## Beehive Server
 The client running on the beehive mote. The mote is responsible for tracking information such as the internal/external temperature & humidity, as well as the current weight of the beehive. The beehives create a mesh network using a sub-GHz frequency radio. The ones closer to the border-router communicate directly and forward traffic from and to distant beehives. Through the border-router (6loWPAN gateway), the data are uploaded to a cloud service.
@@ -111,8 +111,6 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 * More on [load cells](https://learn.sparkfun.com/tutorials/getting-started-with-load-cells)
 
 ##TODO
-* Add links 
-* Add script
 
 1. Adding more sensors to the beehive
 2. Have a hollistic image of the current beehive condition
