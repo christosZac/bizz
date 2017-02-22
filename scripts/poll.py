@@ -68,19 +68,19 @@ def main():  # pragma: no cover
             # Start making the requests to different resources.
             # The returned values are stored in different variables.
             client = HelperClient(server=(host, port))
-            response_temp = client.get(path + temp_path) 
+            response_temp = client.get(path + temp_path, None, 30)
             # Set the right data format for the API call.
             dashboardTemp = {'meaning' : 'temperature' , 'value' : float(response_temp.payload) /10 }
             client.stop()
 
             client = HelperClient(server=(host, port))
-            response_hum = client.get(path + hum_path)
+            response_hum = client.get(path + hum_path, None, 30)
             # Set the right data format for the API call.
             dashboardHum = {'meaning' : 'humidity' , 'value' : float(response_hum.payload) / 10 }
             client.stop()
 
             client = HelperClient(server=(host, port))
-            response_load = client.get(path + load_path)
+            response_load = client.get(path + load_path, None, 30)
             # Set the right data format for the API call.
             dashboardLoad = {'meaning' : 'load' , 'value' : float(response_load.payload) /1000 }
             client.stop()
