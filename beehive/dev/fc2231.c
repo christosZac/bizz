@@ -90,7 +90,7 @@ status(int type)
 uint16_t
 convert2kg(uint16_t mV)
 {
-  int grams;
+  uint32_t grams;
 
   grams = (mV - FC2231_CONSTANT) * 1000 / FC2231_SLOPE;  
 
