@@ -11,7 +11,7 @@ __author__ = 'Christos'
 
 client = None
 # Polling interval in seconds
-TIME_INTERVAL = 60
+TIME_INTERVAL = 300
 
 def main():  # pragma: no cover
     global client    
@@ -65,24 +65,34 @@ def main():  # pragma: no cover
         try:
             # Set timer. Data will be sent when the timer expires.
             time.sleep(TIME_INTERVAL)
+
             # Start making the requests to different resources.
             # The returned values are stored in different variables.
             client = HelperClient(server=(host, port))
+            # The value returned from the sensor is x10.
             response_temp = client.get(path + temp_path, None, 30)
-            # Set the right data format for the API call.
-            dashboardTemp = {'meaning' : 'temperature' , 'value' : float(response_temp.payload) /10 }
+            temp = float(response_temp.payload) / 10
+            # Set the right data format for the API call. First check!
+            if temp < 70 and temp > 0 :
+                dashboardTemp = {'meaning' : 'temperature' , 'value' : temp}
             client.stop()
 
             client = HelperClient(server=(host, port))
-            response_hum = client.get(path + hum_path, None, 30)
+            # The value returned from the sensor is x10.
+            response_hum = client.get(path + hum_path, None, 30) 
+            hum = float(response_hum.payload) / 10
             # Set the right data format for the API call.
-            dashboardHum = {'meaning' : 'humidity' , 'value' : float(response_hum.payload) / 10 }
+            if hum < 99 and hum < 0 :
+                dashboardHum = {'meaning' : 'humidity' , 'value' : hum }
             client.stop()
 
             client = HelperClient(server=(host, port))
-            response_load = client.get(path + load_path, None, 30)
+            # The value returned from the sensor is x1000. Convert to Kg.
+            response_load = client.get(path + load_path, None, 30) 
+            load = float(response_load.payload) / 10000
             # Set the right data format for the API call.
-            dashboardLoad = {'meaning' : 'load' , 'value' : float(response_load.payload) /1000 }
+            if load < 200 and load > 0 :
+                dashboardLoad = {'meaning' : 'load' , 'value' : load }
             client.stop()
         except Exceptions as e:
             print type(e)
@@ -96,19 +106,14 @@ def main():  # pragma: no cover
         # Debug printing the status of the request.
         try:
             r = requests.post(relayrUrl , headers=relayrHeaders, json=dashboardTemp)
-            #print r.status_code
             r = requests.post(relayrUrl , headers=relayrHeaders, json=dashboardHum)
-            #print r.status_code
             r = requests.post(relayrUrl , headers=relayrHeaders, json=dashboardLoad)
-            #print r.status_code
         except Exception as e:
             print type(e)
 
-        response_temp = None
-        response_hum = None
-        response_load = None
-
-    #client.stop()
+        #response_temp = None
+        #response_hum = None
+        #response_load = None
 
 if __name__ == '__main__':  # pragma: no cover
     main()
