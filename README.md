@@ -1,5 +1,3 @@
-# README In Progress...
-
 # Save the bees! A 6loWPAN approach
 
 ## Introduction
@@ -110,9 +108,7 @@ The load sensors give out a voltage linear to the weight applied on them. That m
 * [relayr. dashboard](https://dev.relayr.io).
 * More on [load cells](https://learn.sparkfun.com/tutorials/getting-started-with-load-cells)
 
-##TODO
-* Add links 
-* Add script
+## TODO
 
 1. Adding more sensors to the beehive
 2. Have a hollistic image of the current beehive condition
